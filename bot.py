@@ -8,6 +8,7 @@ from discord import commands
 import random
 import json
 import typing
+import datetime
 
 with open('config.json', 'r') as f:
     config = json.load(f)
@@ -44,9 +45,9 @@ async def blahaj_says(ctx, message: discord.Message):
 @bot.slash_command(guild_ids = testingservers, name='help', description='list of commands')
 async def help(ctx):
     embed = discord.Embed(description="Blahaj commands", color=discord.Color.from_rgb(178, 208, 250))
-    embed.add_field(name="Fun commands", value="`-blahaj` >Show a random blahaj \n `-shark` >Show a random blahaj")
+    embed.add_field(name="", value="**Fun Commands** \n `-blahaj` \n `-shark` \n `-kill` \n \n **Moderation commands** \n `-domain_expansion` \n `-release`")
+    embed.add_field(name="‎", value=">Show a random blahaj \n >Show a random blahaj \n >Kill someone (even yourself) \n \n \n >Timeout a user \n >Remove timeout from a user")
     embed.add_field(name = chr(173), value = chr(173))
-    embed.add_field(name="Moderation commands", value="`-domain_expansion` >Send someone to a domain. Specify a number to to specify the number of domain. \n `-release` >Release someone from domains.")
     await ctx.respond(embed=embed)
 
 @bot.slash_command(guild_ids = testingservers, name='blahaj', description='show a random blahaj')
@@ -77,26 +78,18 @@ async def blahaj(ctx):
     embed.set_image(url=blahajImageLink)
     await ctx.respond(embed=embed)
 
-@bot.slash_command(guild_ids = testingservers, name='domain_expansion', description ='send a user to a domain')
+@bot.slash_command(guild_ids = testingservers, name='domain_expansion', description ='Timeout a user')
 @default_permissions(manage_roles=True)
-async def domain_expansion(ctx, domain_number: discord.Option(int, choices=[1, 2, 3]), member: discord.Member):
-    if domain_number == 1:
-        role = discord.utils.get(member.guild.roles, id=(1187353451735289897))
-    elif domain_number == 2:
-        role = discord.utils.get(member.guild.roles, id=(1201105937876914309))
-    elif domain_number == 3:
-        role = discord.utils.get(member.guild.roles, id=(1201106063487926322))
+async def domain_expansion(ctx, member: discord.Member, duration: int, reason: str | None = None):
+    timeout_time = datetime.timedelta(seconds=duration)
+    await member.timeout(datetime.datetime.now(datetime.timezone.utc) + timeout_time, reason=reason)
     await ctx.respond(file=File("Domain Expansion.mp4"))
-    await member.add_roles(role)
 
-@bot.slash_command(guild_ids = testingservers, name="release", description='release a user from a domain')
+@bot.slash_command(guild_ids = testingservers, name="release", description='Remove timeout from a user')
 @default_permissions(manage_roles=True)
 async def release(ctx, member: discord.Member):
-    role = discord.utils.get(member.guild.roles, id=(1187353451735289897))
-    role2 = discord.utils.get(member.guild.roles, id=(1201105937876914309))
-    role3 = discord.utils.get(member.guild.roles, id=(1201106063487926322))
+    await member.edit(communication_disabled_until=None)
     await ctx.respond(file=File("Domain Reversal.mp4"))
-    await member.remove_roles(role, role2, role3)
 
 @bot.slash_command(guild_ids = testingservers, name="kill", description='kill someone')
 async def kill(ctx, target: discord.Member):
