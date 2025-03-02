@@ -1,18 +1,18 @@
 import discord
-from discord import player
-from discord import colour
-from discord import SlashCommandGroup
 from discord import File
 from discord import default_permissions
-from discord import commands
 import random
 import json
-import typing
 import datetime
 
 with open('config.json', 'r') as f:
     config = json.load(f)
+
+with open('replies.json', 'r') as f:
+    replies = json.load(f)
+
 TOKEN = config['token']
+REPLIES = replies
 
 intents = discord.Intents.default()
 intents.message_content = True
@@ -20,21 +20,60 @@ intents.members = True
 intents.moderation = True
 
 bot = discord.Bot(command_prefix='-', intents = intents)
-testingservers = [1281122097778921515, 713322963193167913]
+testingservers = [1281122097778921515, 713322963193167913, 1345800065800736768]
 
+
+def find_matching_key(message: str, json_data: json):
+    for key,_ in json_data.items():
+        # print(str(key))
+        # print(message)
+
+        if str(key) in message:
+            return key
+    return None
+
+def normalize_string(input_string):
+    normalized_string = input_string.replace("\t", "").replace("\n", "").replace("\0", "")
+    
+    if normalized_string == "None":
+        return ""
+    
+    return normalized_string.lower()
+
+def random_blahaj():
+        with open('blahaj.json') as dt:
+            data = json.load(dt)
+            random_index = random.randint(0, len(data) - 1)
+            return data[random_index]["url"], data[random_index]["name"]
+        
 @bot.event
 async def on_ready():
-    await bot.change_presence(activity=discord.Activity(type=discord.ActivityType.playing, name="Blahaj World"))
+    await bot.change_presence(activity=discord.Activity(type=discord.ActivityType.streaming, name="Blahaj World 🦈"))
     print("We Are Ready Now")
 
 @bot.event
 async def on_message(message):
     if bot.user.mentioned_in(message) and message.reference is None:
         await message.reply("🎆 The Haj is here! 🦈")
-    elif "shark" in message.content.lower() and message.author.id != bot.user.id:
-        await message.reply("shark")
-    elif "yokoso" in message.content.lower() and message.author.id != bot.user.id:
-        await message.reply("<:YOKOSO:1167289778190946334>")
+    else:
+        rm = normalize_string(message.content)
+        if (len(rm) >= 3 and len(rm)):
+            k = find_matching_key(rm, REPLIES)
+            if k and message.author.id != bot.user.id:
+                # print(k)
+                await message.reply(REPLIES[k])
+        
+    # elif "haj" in message.content.lower() and message.author.id != bot.user.id:
+    #     await message.reply("https://tenor.com/view/blahaj-go-spinny-blahaj-blahaj-spin-spin-shark-spin-gif-25670993")
+    # elif "shark" in message.content.lower() and message.author.id != bot.user.id:
+    #     await message.reply("shark")
+    # elif "yokoso" in message.content.lower() and message.author.id != bot.user.id:
+    #     await message.reply("<:YOKOSO:1167289778190946334>")
+    # elif "hate crime" in message.content.lower() and message.author.id != bot.user.id:
+    #     await message.reply("https://tenor.com/view/blahaj-gif-27048745")
+    # elif "blahaj lore" in message.content.lower() and message.author.id != bot.user.id:
+    #     await message.reply("https://tenor.com/view/blahaj-blahaj-lore-shark-shark-plushie-shark-plush-gif-23049674")
+    
     await bot.process_application_commands(message)
 
 @bot.message_command(guild_ids = testingservers, name='Blåhaj says')
@@ -52,12 +91,6 @@ async def help(ctx):
 
 @bot.slash_command(guild_ids = testingservers, name='blahaj', description='show a random blahaj')
 async def blahaj(ctx):
-    def random_blahaj():
-        with open('blahaj.json') as dt:
-            data = json.load(dt)
-            random_index = random.randint(0, len(data) - 1)
-            return data[random_index]["url"], data[random_index]["name"]
-
     blahajImageLink, blahajImageName = random_blahaj()
     embed = pycord.Embed(
         description=f"Here is a **{blahajImageName}** 🦈", color=pycord.Color.from_rgb(178, 208, 250))
@@ -66,12 +99,6 @@ async def blahaj(ctx):
 
 @bot.slash_command(guild_ids = testingservers, name='shark', description='show a random blahaj')
 async def blahaj(ctx):
-    def random_blahaj():
-        with open('blahaj.json') as dt:
-            data = json.load(dt)
-            random_index = random.randint(0, len(data) - 1)
-            return data[random_index]["url"], data[random_index]["name"]
-
     blahajImageLink, blahajImageName = random_blahaj()
     embed = discord.Embed(
         description=f"Here is a **{blahajImageName}** 🦈", color=discord.Color.from_rgb(178, 208, 250))
@@ -105,7 +132,7 @@ async def kill(ctx, target: discord.Member):
             description=f"**{ctx.author}** ended **{target}**'s life!!", color=discord.Color.from_rgb(160, 0, 0))
         embed.set_image(url=killImageLink)
 
-        role = discord.utils.get(target.guild.roles, id=(713714211552886875))
+        # role = discord.utils.get(target.guild.roles, id=(713714211552886875))
         await ctx.respond(embed=embed)
     else:
         def random_kill():
@@ -119,7 +146,7 @@ async def kill(ctx, target: discord.Member):
             description=f"**{ctx.author}** committed suicide.", color=discord.Color.from_rgb(160, 0, 0))
         embed.set_image(url=killImageLink)
 
-        role = discord.utils.get(target.guild.roles, id=(713714211552886875))
+        # role = discord.utils.get(target.guild.roles, id=(713714211552886875))
         await ctx.respond(embed=embed)
 
 bot.run(TOKEN)
