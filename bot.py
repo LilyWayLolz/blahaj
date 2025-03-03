@@ -57,7 +57,7 @@ async def on_message(message):
         await message.reply("🎆 The Haj is here! 🦈")
     else:
         rm = normalize_string(message.content)
-        if (len(rm)):
+        if (len(rm) >= 1 and len(rm)):
             k = find_matching_key(rm, REPLIES)
             if k and message.author.id != bot.user.id:
                 # print(k)
