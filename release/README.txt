@@ -1,0 +1,1 @@
+To get the bot running, insert your bot token into config.json

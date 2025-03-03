@@ -57,7 +57,7 @@ async def on_message(message):
         await message.reply("🎆 The Haj is here! 🦈")
     else:
         rm = normalize_string(message.content)
-        if (len(rm) >= 3 and len(rm)):
+        if (len(rm)):
             k = find_matching_key(rm, REPLIES)
             if k and message.author.id != bot.user.id:
                 # print(k)
@@ -73,6 +73,9 @@ async def on_message(message):
     #     await message.reply("https://tenor.com/view/blahaj-gif-27048745")
     # elif "blahaj lore" in message.content.lower() and message.author.id != bot.user.id:
     #     await message.reply("https://tenor.com/view/blahaj-blahaj-lore-shark-shark-plushie-shark-plush-gif-23049674")
+    
+    # wtf was I doing when I wrote this - kaus
+    # oh yeah I wrote that code over a year ago while procrastinating in school then never updated it - kaus
     
     await bot.process_application_commands(message)
 
