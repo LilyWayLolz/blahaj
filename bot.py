@@ -86,17 +86,22 @@ async def blahaj_says(ctx, message: discord.Message):
 
 @bot.slash_command(guild_ids = testingservers, name='help', description='list of commands')
 async def help(ctx):
+    responses = ""
+    for key in REPLIES:
+        responses += "\n> "
+        responses += key
+    responses = responses[:-2]
     embed = discord.Embed(description="Blahaj commands", color=discord.Color.from_rgb(178, 208, 250))
-    embed.add_field(name="", value="**Fun Commands** \n `-blahaj` \n `-shark` \n `-kill` \n \n **Moderation commands** \n `-domain_expansion` \n `-release`")
-    embed.add_field(name="‎", value=">Show a random blahaj \n >Show a random blahaj \n >Kill someone (even yourself) \n \n \n >Timeout a user \n >Remove timeout from a user")
-    embed.add_field(name = chr(173), value = chr(173))
+    embed.add_field(name="Fun Commands", value="\n **blahaj** \n > Show a random blahaj \n **shark** \n > Show a random blahaj \n **kill** \n > Kill someone (even yourself) ")
+    embed.add_field(name="Moderation commands", value="\n **domain_expansion** \n > Timeout a user \n **release** \n > Remove timeout from a user")
+    embed.add_field(name="Stuff Blåhaj responds to!", value=responses)
     await ctx.respond(embed=embed)
 
 @bot.slash_command(guild_ids = testingservers, name='blahaj', description='show a random blahaj')
 async def blahaj(ctx):
     blahajImageLink, blahajImageName = random_blahaj()
-    embed = pycord.Embed(
-        description=f"Here is a **{blahajImageName}** 🦈", color=pycord.Color.from_rgb(178, 208, 250))
+    embed = discord.Embed(
+        description=f"Here is a **{blahajImageName}** 🦈", color=discord.Color.from_rgb(178, 208, 250))
     embed.set_image(url=blahajImageLink)
     await ctx.respond(embed=embed)
 
