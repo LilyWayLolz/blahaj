@@ -20,7 +20,7 @@ intents.members = True
 intents.moderation = True
 
 bot = discord.Bot(command_prefix="-", intents=intents)
-testingservers = [1281122097778921515, 1475067062660366387]
+testingservers = [1281122097778921515, 1475067062660366387, 1493590280916439233]
 
 
 def find_matching_key(message: str, json_data: json):
