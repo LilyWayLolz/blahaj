@@ -1,4 +1,4 @@
 Note: This project has been migrated to Codeberg. Go check it out over there!
 https://codeberg.org/LilyWayLolz/blahaj
 
-This project was originally built off [AtulACleaver's Blahaj bot](https://github.com/AtulACleaver/Blahaj-Bot). I (Kaus) meant to use it for personal use, but I ended up building on it and turned it into a bit of my own project. Still, I think I should give credit to what helped me start this project.
+This project was originally built off [AtulACleaver's Blahaj bot](https://github.com/AtulACleaver/Blahaj-Bot). I (Lily) meant to use it for personal use, but I ended up building on it and turned it into a bit of my own project. Still, I think I should give credit to what helped me start this project.
